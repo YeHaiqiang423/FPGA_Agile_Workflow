@@ -1,5 +1,58 @@
 # 孩子们，我来教你们怎么用vscode + Github + vivado（Windows版）+ iverilog + surfer（看波形）+ Tcl/shell 进行联动开发
 
+## 说在前面
+
+本教程旨在抛弃vivado界面，让UI归UI，引擎归引擎，提升开发效率。
+
+我们会使用到的技能、软件、插件如下：
+1. VS Code (宇宙第一编辑器) + WSL2 
+
+考虑到大家大多数为Windows操作系统开发，为了防止下载配置虚拟机带来的挫败感，我们直接使用Windows 里的 WSL2 (Ubuntu 系统)（WSL全称为Windows Subsystem of Linux，是不是很好理解喵）
+
+2. Vivado (Windows版) / iverilog
+
+我们再也不会去点开它的图形界面（除非去配IP核），而是通过命令行悄悄唤醒它的底层仿真引擎 (XSIM) 去帮我们跑数据。在这里要说清楚的是，iverilog本身是开源工具，是无法解析vivado的加密IP核的，所以我们还是要使用XSIM进行仿真，iverilog本身是一个辅助你检查语法的编译器。
+
+3. Git & GitHub
+
+解决多人协作冲突，记录每一次代码快照。代码写炸了一键回退，永远告别压缩包乱飞的时代。队友很舒服。
+
+4. TerosHDL 插件（很牛逼的插件，我也没能太深入研究，但是目前我会的东西足以大大提升效率）
+
+它能在 VS Code 里自动帮你补全 Verilog 代码、画出模块层级树，甚至不需要经过 Vivado 综合，就能直接给你渲染出 RTL 门级电路连线图。
+
+5. Surfer
+
+仿真跑完瞬间，直接在 VS Code 里点开波形文件（支持极限压缩的 .fst 格式），缩放平移毫无卡顿，再也不用忍受 Vivado 自带波形查看器的龟速。此外，也可以通过Tcl脚本直接渲染真实开发板上 ILA 抓取并导出的波形数据。
+***
+
+稍微上帝视角说明一下流程：
+
+1. 获取代码与编写（Git + VS Code + TerosHDL）
+
+每天开工第一件事，在终端敲 git pull 拉取队友的最新进度。
+
+在 VS Code 里愉快地敲 Verilog 代码。TerosHDL显示Hierarchy，模块关系一目了然。
+
+2. 一键无头仿真（WSL2 + Bash/Tcl + Vivado XSIM）
+
+代码写完，直接在 VS Code 底部的终端（WSL 环境）里敲一行脚本运行命令，比如 ./quicksim.sh。
+Windows 里的 Vivado 底层引擎 (XSIM)启动，跑完Testbench后退出，并在文件夹里留下波形文件（.fst 或 .vcd）。
+
+3. 秒开波形分析（Surfer）
+
+在 VS Code 的文件树里找到刚刚生成的波形文件，鼠标点击。
+
+Surfer 插件瞬间接管，波形直接在代码旁边的分屏里渲染出来。哪里不对改哪里，改完再按一下上方向键重新运行脚本，实现“修改 -> 运行 -> 看波形”的极速闭环。
+
+4. 存档并同步（Git & GitHub）
+
+模块跑通了，波形完美了。
+
+在终端敲下 git add . 和 git commit 将代码放入本地保险箱。
+
+敲下 git push 发射到云端。队友立刻就能用你的最新成果。
+
 ## Git & Github 篇
 
 ### 一、看懂Git核心原理
